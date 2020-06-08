@@ -9,7 +9,9 @@ import './Blog.css';
 class Blog extends Component {
     state = {
         posts: [],
-        selectedPostID: null
+        selectedPostID: null,
+
+        error: false
     }
 
     componentDidMount() {
@@ -28,21 +30,29 @@ class Blog extends Component {
 
             // Updating the state once we receive the data
             this.setState({posts: updatedPosts})
+        })
+        .catch(error => {
+            this.setState({error: true});
         });
     }
 
     loadPostData = (id) => this.setState({selectedPostID: id});
 
     render() {
-        // Going through each post and creating a Post component
-        const posts = this.state.posts.map(post => {
+        let posts = <p style={{textAlign: 'center'}}>Something went wrong!</p>
+
+        if (!this.state.error)
+        {
+            // Going through each post and creating a Post component
+            posts = this.state.posts.map(post => {
             return <Post
             key={post.id}
             title={post.title}
             author={post.author}
             clicked={() => this.loadPostData(post.id)}/>
-        });
-
+            });
+        }
+        
         return (
             <div>
                 <section className="Posts">
