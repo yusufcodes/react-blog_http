@@ -8,7 +8,8 @@ import './Blog.css';
 
 class Blog extends Component {
     state = {
-        posts: []
+        posts: [],
+        selectedPostID: null
     }
 
     componentDidMount() {
@@ -16,16 +17,30 @@ class Blog extends Component {
         // Sidenote: Can I jusrt use Fetch API here?
         axios.get('https://jsonplaceholder.typicode.com/posts')
         .then(response => {
-            // Updating the state once we receive the data
+            // Transforming data: only keeping the first 4 posts and then adding another property to the object
             const posts = response.data.slice(0, 4);
-            this.setState({posts: response.data})
+            const updatedPosts = posts.map(post => {
+                return {
+                    ...post,
+                    author: 'Yusuf'
+                }
+            })
+
+            // Updating the state once we receive the data
+            this.setState({posts: updatedPosts})
         });
     }
+
+    loadPostData = (id) => this.setState({selectedPostID: id});
 
     render() {
         // Going through each post and creating a Post component
         const posts = this.state.posts.map(post => {
-            return <Post key={post.id} title={post.title}/>
+            return <Post
+            key={post.id}
+            title={post.title}
+            author={post.author}
+            clicked={() => this.loadPostData(post.id)}/>
         });
 
         return (
@@ -34,7 +49,7 @@ class Blog extends Component {
                     {posts}
                 </section>
                 <section>
-                    <FullPost />
+                    <FullPost id={this.state.selectedPostID}/>
                 </section>
                 <section>
                     <NewPost />
