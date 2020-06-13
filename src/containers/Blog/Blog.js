@@ -1,69 +1,22 @@
 import React, { Component } from 'react';
-import axios from 'axios';
-
-import Post from '../../components/Post/Post';
-import FullPost from '../../components/FullPost/FullPost';
-import NewPost from '../../components/NewPost/NewPost';
+import { Route } from 'react-router-dom';
 import './Blog.css';
+import Posts from '../Posts/Posts';
 
 class Blog extends Component {
-    state = {
-        posts: [],
-        selectedPostID: null,
-
-        error: false
-    }
-
-    componentDidMount() {
-        // Getting our data from API
-        // Sidenote: Can I jusrt use Fetch API here?
-        axios.get('https://jsonplaceholder.typicode.com/posts')
-        .then(response => {
-            // Transforming data: only keeping the first 4 posts and then adding another property to the object
-            const posts = response.data.slice(0, 4);
-            const updatedPosts = posts.map(post => {
-                return {
-                    ...post,
-                    author: 'Yusuf'
-                }
-            })
-
-            // Updating the state once we receive the data
-            this.setState({posts: updatedPosts})
-        })
-        .catch(error => {
-            this.setState({error: true});
-        });
-    }
-
-    loadPostData = (id) => this.setState({selectedPostID: id});
-
     render() {
-        let posts = <p style={{textAlign: 'center'}}>Something went wrong!</p>
-
-        if (!this.state.error)
-        {
-            // Going through each post and creating a Post component
-            posts = this.state.posts.map(post => {
-            return <Post
-            key={post.id}
-            title={post.title}
-            author={post.author}
-            clicked={() => this.loadPostData(post.id)}/>
-            });
-        }
-        
         return (
             <div>
-                <section className="Posts">
-                    {posts}
-                </section>
-                <section>
-                    <FullPost id={this.state.selectedPostID}/>
-                </section>
-                <section>
-                    <NewPost />
-                </section>
+                <header>
+                    <nav className='Blog'>
+                        <ul>
+                            <li><a href="/">Home</a></li>
+                            <li><a href="/new-post">New Post</a></li>
+                        </ul>
+                    </nav>
+                </header>
+                { /* Setting up routes - exact means only / renders Home, not just as a prefix */}
+                <Route path="/" exact render={() => <h1>Home</h1>} />
             </div>
         );
     }
