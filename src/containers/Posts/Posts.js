@@ -11,8 +11,9 @@ class Posts extends Component {
     }
 
     componentDidMount() {
+        console.log(this.props);
         // Getting our data from API
-        // Sidenote: Can I jusrt use Fetch API here?
+        // Sidenote: Can I just use Fetch API here?
         axios.get('https://jsonplaceholder.typicode.com/posts')
         .then(response => {
             // Transforming data: only keeping the first 4 posts and then adding another property to the object
