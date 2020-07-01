@@ -12,7 +12,13 @@ class Posts extends Component {
     componentDidMount() {
         console.log(this.props);
         // Getting our data from API
-        axios.get('https://jsonplaceholder.typicode.com/posts')
+        let config = {
+            headers: {
+                'Access-Control-Allow-Origin': true
+            }
+        }
+
+        axios.get('/posts', config)
         .then(response => {
             // Transforming data: only keeping the first 4 posts and then adding another property to the object
             const posts = response.data.slice(0, 4);
